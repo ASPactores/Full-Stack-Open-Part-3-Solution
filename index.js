@@ -1,9 +1,18 @@
 const { request, response } = require('express');
 const express = require('express');
+var morgan = require('morgan');
 const app = express();
 const port = 3001;
 
+morgan.token('person', request => {
+  if (request.method === 'POST') {
+    return `${JSON.stringify(request.body)}`;
+  }
+  return " "
+})
+
 app.use(express.json());
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :person'));
 
 const generateId = () => {
   return Math.floor(Math.random() * 1000) + 1;
